@@ -31,7 +31,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 from base64 import standard_b64decode, standard_b64encode
-from io import StringIO
+from io import BytesIO, StringIO
 from math import ceil, floor, sqrt
 
 from PIL import Image
@@ -43,13 +43,21 @@ def encode(string):
     width = floor(sqrt(length / 3.0))
     height = ceil((length / 3.0) / width)
     bytes_needed = int(width * height * 3)
+
     while length < bytes_needed:
         string += "\n"
         length += 1
-    i = Image.frombytes("RGB", (int(width), int(height)), string)
-    buff = StringIO()
-    i.save(buff, "png")
-    encoded = standard_b64encode(buff.getvalue())
+    # Also an option?
+    # string+= "\n"*(bytes_needed - length)
+    # length+= bytes_needed - length
+
+    bytes_ = bytes(string, encoding="utf8")
+    i = Image.frombytes("RGB", (int(width), int(height)), bytes_)
+    buff = BytesIO()
+    # This encoding line is the most time consuming part of the function.
+    # compress_level handles the tradeoff between size of encoded msg and speed.
+    i.save(buff, "png", compress_level=1)
+    encoded = standard_b64encode(buff.getvalue()).decode("utf-8")
     return encoded
 
 

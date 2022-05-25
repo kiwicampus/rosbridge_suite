@@ -354,9 +354,8 @@ class Subscribe(Capability):
 
         outgoing_msg = {"op": "publish", "topic": topic}
         if compression == "png":
-            outgoing_msg["msg"] = message.get_json_values()
-            outgoing_msg_dumped = encode_json(outgoing_msg)
-            outgoing_msg = {"op": "png", "data": encode_png(outgoing_msg_dumped)}
+            outgoing_msg_dumped = encode_json(message.get_json_values())
+            outgoing_msg.update({"op": "png", "data": encode_png(outgoing_msg_dumped)})
         elif compression == "cbor":
             outgoing_msg["msg"] = message.get_cbor_values()
             outgoing_msg = bytearray(encode_cbor(outgoing_msg))
