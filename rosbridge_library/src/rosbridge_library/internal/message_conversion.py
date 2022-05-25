@@ -89,6 +89,8 @@ ros_primitive_types = [
     "string",
 ]
 ros_header_types = ["Header", "std_msgs/Header", "roslib/Header"]
+ros_binary_types = ["uint8[]", "char[]"]
+# THIS BRAKES SENDING MESSAGES OF TYPE sensor_msgs.msg.Image
 ros_binary_types = ["uint8[]", "char[]", "sequence<uint8>", "sequence<char>"]
 list_tokens = re.compile("<(.+?)>")
 bounded_array_tokens = re.compile(r"(.+)\[.*\]")
